@@ -1,0 +1,32 @@
+#check if data file exists already, if not download
+if (!file.exists(filename)){
+  file1 <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
+  download.file(file1, filename, method="curl")
+}  
+if (!file.exists("power_consumption")) { 
+  unzip(filename) 
+}
+
+
+#read in data
+power <- read.table("household_power_consumption.txt", header= TRUE, sep =";",  na.strings=c("NA", "?"))
+summary(power$Date)
+library(dplyr)
+#we are only using 2 dates- properly format date and time
+temp <- filter(power , Date== c("2/1/2007", "2/2/2007"))
+data <- mutate (temp, Date= as.Date(Date, format="%m/%d/%Y") )
+data$time <- strptime(data$Time, "%H:%M:%S")
+
+datetime <- paste(as.Date(data$Date), data$Time)
+data$Datetime <- as.POSIXct(datetime)
+
+#Plot 1
+png("plot1.png", width=480, height=480)
+hist(data$Global_active_power, col="red", 
+     breaks=seq(0,6,by=.5),
+     main =paste("Global Active Power"),
+     xlab= "Global Active Power (kilowats)",
+     ylab= "Frequency")
+
+dev.off()
+
