@@ -23,7 +23,6 @@ data$Datetime <- as.POSIXct(datetime)
 #Plot 1
 png("plot1.png", width=480, height=480)
 hist(data$Global_active_power, col="red", 
-     breaks=seq(0,6,by=.5),
      main =paste("Global Active Power"),
      xlab= "Global Active Power (kilowats)",
      ylab= "Frequency")
